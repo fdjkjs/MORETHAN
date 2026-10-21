@@ -310,6 +310,24 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     background: #fff;
     box-shadow: 0 1px 2px rgba(0,0,0,.025);
   }
+  .prep-table tbody tr.category-start {
+    margin-top: 15px;
+    grid-template-rows: auto auto auto;
+  }
+  .prep-table tbody tr.category-start::before {
+    content: attr(data-category-label);
+    display: block;
+    grid-column: 1 / -1;
+    grid-row: 1;
+    padding: 7px 10px 6px;
+    background: #242424;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .06em;
+    line-height: 1.3;
+  }
+  .prep-table tbody tr.category-start:first-child { margin-top: 0; }
   .prep-table tbody td {
     display: block;
     width: auto !important;
@@ -333,16 +351,11 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     line-height: 1.3;
     text-align: left;
   }
-  .prep-table tbody td.product-cell::before {
-    content: attr(data-category);
-    display: block;
-    margin-bottom: 3px;
-    color: #777;
-    font-size: 9px;
-    font-weight: 600;
-    line-height: 1.3;
-    letter-spacing: .01em;
-  }
+  .prep-table tbody td.product-cell::before { content: none; display: none; }
+  .prep-table tbody tr.category-start td.product-cell,
+  .prep-table tbody tr.category-start td.inventory-cell { grid-row: 2; }
+  .prep-table tbody tr.category-start td.stock-cell,
+  .prep-table tbody tr.category-start td.quantity-cell { grid-row: 3; }
   .prep-table tbody td.inventory-cell {
     grid-column: 2;
     grid-row: 1;
@@ -586,11 +599,19 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     saveDraft();
   }
   function syncPrepTableAppearance() {
+    // カテゴリをスマートフォンではグループ見出しとして表示する。
     // 「在庫あり」がオンの行は必要数を非表示・グレーにし、値は保持しておく。
+    let previousCategory = '';
     for (const row of types.prep.list.querySelectorAll('tr[data-entry="prep"]')) {
       const inStock = row.querySelector('[data-field="inStock"]')?.checked !== false;
       const quantityCell = row.querySelector('.quantity-cell');
       const quantity = row.querySelector('[data-field="quantity"]');
+      const productCell = row.querySelector('.product-cell');
+      const rawCategory = (productCell?.dataset.category || 'その他').trim();
+      const category = rawCategory.replace(/\s*（期限[^）]*）/g, '').trim() || 'その他';
+      row.dataset.categoryLabel = category;
+      row.classList.toggle('category-start', category !== previousCategory);
+      previousCategory = category;
       row.classList.toggle('in-stock', inStock);
       if (quantity) quantity.disabled = inStock;
       if (quantityCell) quantityCell.setAttribute('aria-label', inStock ? '在庫ありのため必要数は非表示' : '必要数');
@@ -600,13 +621,19 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     const cfg = types[type];
     if (type === 'prep') {
       // 「在庫あり」のチェックを外した商品だけを仕込み対象として共有する。
-      return [...cfg.list.querySelectorAll('tr[data-entry="prep"]')].map(row => ({
-        id: row.dataset.rowId,
-        item: row.dataset.item || '',
-        stock: row.dataset.stock || '',
-        inStock: row.querySelector('[data-field="inStock"]')?.checked !== false,
-        quantity: trimmed(row.querySelector('[data-field="quantity"]'))
-      })).filter(item => item.inStock === false);
+      return [...cfg.list.querySelectorAll('tr[data-entry="prep"]')].map(row => {
+        const productCell = row.querySelector('.product-cell');
+        const rawCategory = (productCell?.dataset.category || 'その他').trim();
+        const category = rawCategory.replace(/\s*（期限[^）]*）/g, '').trim() || 'その他';
+        return {
+          id: row.dataset.rowId,
+          item: row.dataset.item || '',
+          category,
+          stock: row.dataset.stock || '',
+          inStock: row.querySelector('[data-field="inStock"]')?.checked !== false,
+          quantity: trimmed(row.querySelector('[data-field="quantity"]'))
+        };
+      }).filter(item => item.inStock === false);
     }
     return [...cfg.list.querySelectorAll('[data-entry]')].map(entry => {
       const obj = {};
@@ -647,13 +674,28 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     return `${month}月${day}日（${weekday}）`;
   }
   function buildMessage() {
-    // 共有文の基本形は「日付＋Bar引継ぎ」と3つの区切り見出し。
-    // 各区分は、入力内容がある場合だけ箇条書きを見出しの直下に追加する。
+    // 共有文は日付＋3つの区切り見出し。空のカテゴリや空の区分は追記しない。
     const date = formatJapaneseDate(trimmed(dateInput));
     const sectionTexts = Object.keys(types).map(type => {
       const cfg = types[type];
-      const lines = collect(type).map(item => meaningfulLine(type, item));
+      const items = collect(type);
       const heading = `- - - - ${cfg.title} - - - -`;
+
+      if (type === 'prep' && items.length) {
+        // 翌朝の仕込みは、ジュース・シロップなどカテゴリごとにまとめて表示する。
+        const groups = new Map();
+        for (const item of items) {
+          const category = item.category || 'その他';
+          if (!groups.has(category)) groups.set(category, []);
+          groups.get(category).push(meaningfulLine(type, item));
+        }
+        const groupedText = [...groups.entries()].map(([category, lines]) =>
+          `【${category}】\n${lines.map(line => `・${line}`).join('\n')}`
+        ).join('\n');
+        return `${heading}\n${groupedText}`;
+      }
+
+      const lines = items.map(item => meaningfulLine(type, item));
       return lines.length ? `${heading}\n${lines.map(line => `・${line}`).join('\n')}` : heading;
     });
     latestMessage = [`${date}Bar引継ぎ`, '', sectionTexts[0], '', sectionTexts[1], '', sectionTexts[2]].join('\n');
