@@ -469,7 +469,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 }
 
 
-/* OCR機能を一時的に無効化しています */
 
 /* Header redesign — refined, editorial monochrome */
 .hero{
@@ -582,6 +581,25 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   .hero-stamp{width:56px;height:60px;min-width:56px}
 }
 
+
+
+/* 発注：発注項目（写真）＋未発注項目（入力） */
+.order-block + .order-block{margin-top:20px;padding-top:18px;border-top:1px solid #ececec}
+.order-block-title{font-size:14px;font-weight:800;color:#191919;margin:0 0 4px}
+.order-block-hint{font-size:12px;color:#666;margin:0 0 11px}
+.photo-actions{display:flex;gap:8px;flex-wrap:wrap}
+.photo-btn{display:inline-flex;gap:7px;align-items:center;border:1px solid #d0d0d0;border-radius:10px;background:#fff;color:#202020;font-weight:800;font-size:13px;padding:10px 13px;transition:all .16s ease}
+.photo-btn svg{flex:none}
+.photo-btn:hover{background:#eaeaea;border-color:#bcbcbc}
+.photo-btn:disabled{opacity:.5;cursor:progress}
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:9px;margin-top:12px}
+.photo-item{position:relative;aspect-ratio:1/1;border:1px solid #dcdcdc;border-radius:10px;overflow:hidden;background:#f1f1f1}
+.photo-item img{width:100%;height:100%;object-fit:cover;display:block}
+.photo-item button{position:absolute;top:4px;right:4px;border:0;border-radius:99px;background:rgba(0,0,0,.72);color:#fff;font-size:11px;line-height:1;padding:6px 8px;font-weight:700}
+.photo-item button:hover{background:#000}
+.preview-photos{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px 1em}
+.preview-photos img{height:88px;width:auto;border-radius:7px;border:1px solid #dcdcdc;display:block}
+@media(max-width:620px){.photo-actions>button{flex:1 1 auto;justify-content:center}}
 </style>
 </head>
 <body>
@@ -603,7 +621,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 
   <section class="panel" id="orderSection">
     <div class="panel-head"><div class="panel-title-wrap"><div class="num">01</div><div><h2>発注</h2></div></div></div>
-        <div id="orderArea"><div class="item-list" id="orderList"></div><div class="section-bottom"><button type="button" class="add-btn" data-add="order">＋ 発注品目を追加</button></div></div>
+        <div id="orderArea"><div class="order-block"><div class="order-block-title">発注項目</div><p class="order-block-hint">発注した内容の写真（発注画面・伝票など）を追加します。</p><div class="photo-actions"><button type="button" class="photo-btn" id="photoCameraBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>カメラで撮影</button><button type="button" class="photo-btn" id="photoLibraryBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>アルバムから選ぶ</button></div><input type="file" id="photoCamera" accept="image/*" capture="environment" class="hidden"><input type="file" id="photoLibrary" accept="image/*" multiple class="hidden"><div class="photo-grid hidden" id="photoGrid"></div></div><div class="order-block"><div class="order-block-title">未発注項目</div><div class="item-list" id="orderList"></div><div class="section-bottom"><button type="button" class="add-btn" data-add="order">＋ 未発注品目を追加</button></div></div></div>
   </section>
 
   <section class="panel" id="prepSection">
@@ -666,7 +684,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   </section>
 </main>
 
-<template id="orderTemplate"><div class="entry" data-entry="order"><div class="entry-toolbar"><button type="button" class="remove">削除</button></div><div class="row-grid"><div class="row-field main-field"><div class="field-head"><label>品目</label></div><input data-field="item" placeholder="例：リキュール・ワイン" maxlength="100"></div><div class="row-field"><label>必要数量</label><input data-field="quantity" placeholder="例：〇本" maxlength="50"></div><div class="row-field"><label>発注状況</label><select data-field="status"><option value="発注済み" selected>発注済み</option><option value="未発注">未発注</option></select></div></div><div class="row-field entry-note"><label>発注予定・納品希望（任意）</label><input data-field="note" placeholder="例：〇日発注予定・納品希望" maxlength="180"></div></div></template>
+<template id="orderTemplate"><div class="entry" data-entry="order"><div class="entry-toolbar"><button type="button" class="remove">削除</button></div><div class="row-grid prep"><div class="row-field main-field"><div class="field-head"><label>品目</label></div><input data-field="item" placeholder="例：リキュール・ワイン" maxlength="100"></div><div class="row-field"><label>必要数量</label><input data-field="quantity" placeholder="例：〇本" maxlength="50"></div></div><div class="row-field entry-note"><label>発注予定・納品希望（任意）</label><input data-field="note" placeholder="例：〇日発注予定・納品希望" maxlength="180"></div></div></template>
 <template id="handoverTemplate"><div class="entry" data-entry="handover"><div class="entry-toolbar"><button type="button" class="remove">削除</button></div><div class="row-field"><div class="field-head"><label>伝達内容</label></div><input data-field="item" placeholder="例：メニュー・材料・グラス変更事項・氷の補充・掃除の引継ぎ" maxlength="180"></div></div></template>
 <script>
 (() => {
@@ -683,6 +701,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   const validation = document.getElementById('validation');
   const status = document.getElementById('status');
   let latestMessage = '';
+  let latestLines = [];
+  const orderPhotos = []; // {blob, url}
   let statusTimer = null;
   const todayJST = () => new Intl.DateTimeFormat('en-CA', {timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
   const trimmed = el => (el?.value || '').trim();
@@ -705,7 +725,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
       } else if (value !== undefined && value !== null) {
         input.value = value;
       }
-      if (field === 'status' && !['発注済み', '未発注'].includes(input.value)) input.value = '発注済み';
     });
     entry.querySelector('.remove').addEventListener('click', () => { entry.remove(); saveDraft(); buildMessage(); });
     entry.querySelectorAll('input,select,textarea').forEach(input => {
@@ -770,7 +789,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
       const label = item.item || '品目未入力';
       const details = [];
       if (item.quantity) details.push(item.quantity);
-      if (item.status) details.push(item.status);
       if (item.note) details.push(item.note);
       return `${label}${details.length ? `（${details.join('／')}）` : ''}`;
     }
@@ -793,31 +811,47 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   }
   function buildMessage() {
     // 共有文は日付＋3つの区切り見出し。空のカテゴリや空の区分は追記しない。
+    // 発注は「発注（写真）」→「未発注（入力項目）」の順。写真はプレビューで該当箇所の直下に表示する。
     const date = formatJapaneseDate(trimmed(dateInput));
-    const sectionTexts = Object.keys(types).map(type => {
+    const lines = [{ t: `${date}Bar引継ぎ` }];
+    for (const type of Object.keys(types)) {
       const cfg = types[type];
       const items = collect(type);
-      const heading = `- - - - ${cfg.title} - - - -`;
-
-      if (type === 'prep' && items.length) {
-        // 翌朝の仕込みは、ジュース・シロップなどカテゴリごとにまとめて表示する。
+      lines.push({ t: '' }, { t: `- - - - ${cfg.title} - - - -` });
+      if (type === 'order') {
+        if (orderPhotos.length) lines.push({ t: `【発注】写真${orderPhotos.length}枚`, photos: [...orderPhotos] });
+        if (items.length) {
+          lines.push({ t: '【未発注】' });
+          for (const item of items) lines.push({ t: `・${meaningfulLine(type, item)}` });
+        }
+      } else if (type === 'prep' && items.length) {
         const groups = new Map();
         for (const item of items) {
           const category = item.category || 'その他';
           if (!groups.has(category)) groups.set(category, []);
           groups.get(category).push(meaningfulLine(type, item));
         }
-        const groupedText = [...groups.entries()].map(([category, lines]) =>
-          `【${category}】\n${lines.map(line => `・${line}`).join('\n')}`
-        ).join('\n');
-        return `${heading}\n${groupedText}`;
+        for (const [category, list] of groups.entries()) {
+          lines.push({ t: `【${category}】` });
+          for (const l of list) lines.push({ t: `・${l}` });
+        }
+      } else {
+        for (const item of items) lines.push({ t: `・${meaningfulLine(type, item)}` });
       }
-
-      const lines = items.map(item => meaningfulLine(type, item));
-      return lines.length ? `${heading}\n${lines.map(line => `・${line}`).join('\n')}` : heading;
+    }
+    latestLines = lines;
+    latestMessage = lines.map(l => l.t).join('\n');
+    preview.replaceChildren();
+    lines.forEach((l, i) => {
+      const hasPhotos = l.photos && l.photos.length;
+      preview.appendChild(document.createTextNode(l.t + (i < lines.length - 1 && !hasPhotos ? '\n' : '')));
+      if (hasPhotos) {
+        const wrap = document.createElement('div');
+        wrap.className = 'preview-photos';
+        for (const ph of l.photos) { const im = document.createElement('img'); im.src = ph.url; im.alt = '発注の写真'; wrap.appendChild(im); }
+        preview.appendChild(wrap);
+      }
     });
-    latestMessage = [`${date}Bar引継ぎ`, '', sectionTexts[0], '', sectionTexts[1], '', sectionTexts[2]].join('\n');
-    preview.textContent = latestMessage;
     validation.classList.add('hidden');
     return latestMessage;
   }
@@ -904,10 +938,20 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     // 入力直後でも最新状態を組み立ててからコピーする。
     const message = buildMessage();
     let copied = false;
+    let rich = false;
+    if (latestLines.some(l => l.photos && l.photos.length) && window.ClipboardItem && navigator.clipboard && navigator.clipboard.write && window.isSecureContext) {
+      try {
+        await navigator.clipboard.write([new ClipboardItem({
+          'text/plain': new Blob([message], { type: 'text/plain' }),
+          'text/html': buildRichHtml().then(h => new Blob([h], { type: 'text/html' }))
+        })]);
+        copied = true; rich = true;
+      } catch (err) { copied = false; }
+    }
 
     // HTTPS環境ではClipboard APIを優先。権限・ブラウザ制限で失敗した場合も
     // 従来方式にフォールバックして、コピー処理自体を止めない。
-    if (navigator.clipboard && window.isSecureContext) {
+    if (!copied && navigator.clipboard && window.isSecureContext) {
       try {
         await navigator.clipboard.writeText(message);
         copied = true;
@@ -940,7 +984,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     }
 
     if (copied) {
-      showStatus('共有文をコピーしました。');
+      showStatus(rich ? '写真つきでコピーしました。メール・ドキュメント等に貼り付けると品目の下に写真が入ります。' : '共有文をコピーしました。');
     } else {
       showStatus('自動コピーに失敗しました。共有文を選択して手動でコピーしてください。', true);
       // 手動コピーにすぐ移れるよう共有文へフォーカス・選択を試みる。
@@ -954,7 +998,94 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     }
   }
 
-  // OCR機能は一時的に削除しています。
+
+  // ===== 発注項目の写真（撮影／アルバムから選択。端末内のみで保持） =====
+  function downsizePhoto(file) {
+    const url = URL.createObjectURL(file);
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 1600;
+        const scale = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
+        canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        URL.revokeObjectURL(url);
+        canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('変換に失敗しました')), 'image/jpeg', 0.85);
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('画像を開けませんでした')); };
+      img.src = url;
+    });
+  }
+  const photoCamera = document.getElementById('photoCamera');
+  const photoLibrary = document.getElementById('photoLibrary');
+  const photoGrid = document.getElementById('photoGrid');
+  const photoBtns = [document.getElementById('photoCameraBtn'), document.getElementById('photoLibraryBtn')];
+  function renderPhotos() {
+    photoGrid.replaceChildren();
+    for (const ph of orderPhotos) {
+      const item = document.createElement('div');
+      item.className = 'photo-item';
+      const img = document.createElement('img');
+      img.src = ph.url; img.alt = '発注の写真';
+      const del = document.createElement('button');
+      del.type = 'button'; del.textContent = '✕'; del.setAttribute('aria-label', 'この写真を削除');
+      del.addEventListener('click', () => {
+        URL.revokeObjectURL(ph.url);
+        orderPhotos.splice(orderPhotos.indexOf(ph), 1);
+        renderPhotos(); buildMessage();
+      });
+      item.append(img, del);
+      photoGrid.appendChild(item);
+    }
+    photoGrid.classList.toggle('hidden', !orderPhotos.length);
+  }
+  function clearPhotos() {
+    for (const ph of orderPhotos) URL.revokeObjectURL(ph.url);
+    orderPhotos.length = 0;
+    renderPhotos();
+  }
+  async function addPhotos(fileList) {
+    const files = [...fileList].filter(f => f.type.startsWith('image/') || /\.(heic|heif)$/i.test(f.name));
+    if (!files.length) return;
+    photoBtns.forEach(b => b.disabled = true);
+    let failed = 0;
+    for (const file of files) {
+      try {
+        const blob = await downsizePhoto(file);
+        orderPhotos.push({ blob, url: URL.createObjectURL(blob) });
+      } catch (err) { failed++; }
+    }
+    photoBtns.forEach(b => b.disabled = false);
+    renderPhotos(); buildMessage();
+    const ok = files.length - failed;
+    showStatus(failed ? `${ok}枚追加、${failed}枚は読み込めませんでした。` : `写真を${ok}枚追加しました。`, Boolean(failed));
+  }
+  document.getElementById('photoCameraBtn').addEventListener('click', () => photoCamera.click());
+  document.getElementById('photoLibraryBtn').addEventListener('click', () => photoLibrary.click());
+  for (const input of [photoCamera, photoLibrary]) {
+    input.addEventListener('change', () => { const files = [...input.files]; input.value = ''; addPhotos(files); });
+  }
+
+  // 写真つきコピー：メール・Googleドキュメント等へ貼り付けると写真も入る
+  const escHtml = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const blobToDataUrl = b => new Promise(res => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.readAsDataURL(b); });
+  async function buildRichHtml() {
+    const parts = [];
+    for (const line of latestLines) {
+      parts.push(`<div>${line.t ? escHtml(line.t) : '<br>'}</div>`);
+      if (line.photos && line.photos.length) {
+        const imgs = [];
+        for (const ph of line.photos) imgs.push(`<img src="${await blobToDataUrl(ph.blob)}" style="height:160px;margin:2px 6px 8px 0">`);
+        parts.push(`<div>${imgs.join('')}</div>`);
+      }
+    }
+    return `<div>${parts.join('')}</div>`;
+  }
 
   document.querySelectorAll('[data-add]').forEach(btn => btn.addEventListener('click', () => addEntry(btn.dataset.add)));
   types.prep.list.addEventListener('input', () => { syncPrepTableAppearance(); saveDraft(); buildMessage(); });
@@ -965,6 +1096,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   document.getElementById('clearBtn').addEventListener('click', () => {
     // 確認ダイアログに依存せず、クリックしたらその場でリセットする。
     // リセット後も各セクションの空の入力欄を1項目ずつ残す。
+    clearPhotos();
     for (const type of ['order', 'handover']) types[type].list.replaceChildren();
     resetPrepTable();
     dateInput.value = todayJST();
