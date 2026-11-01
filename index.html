@@ -679,7 +679,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     <div class="preview-head"><h2>共有文</h2></div>
     <div class="preview" id="preview" role="status" aria-live="polite"></div>
     <div id="validation" class="warning hidden"></div>
-    <div class="preview-actions"><button type="button" class="btn btn-secondary" id="copyBtn">共有文をコピー</button><button type="button" class="btn btn-secondary" id="clearBtn">入力をリセット</button></div>
+    <div class="preview-actions"><button type="button" class="btn btn-secondary" id="copyBtn">共有文をコピー</button><button type="button" class="btn btn-secondary hidden" id="sharePhotosBtn">写真を共有（LINEなど）</button><button type="button" class="btn btn-secondary" id="clearBtn">入力をリセット</button></div>
     <div class="status" id="status" aria-live="polite"></div>
   </section>
 </main>
@@ -852,6 +852,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         preview.appendChild(wrap);
       }
     });
+    document.getElementById('sharePhotosBtn').classList.toggle('hidden', !orderPhotos.length);
     validation.classList.add('hidden');
     return latestMessage;
   }
@@ -1070,6 +1071,20 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   for (const input of [photoCamera, photoLibrary]) {
     input.addEventListener('change', () => { const files = [...input.files]; input.value = ''; addPhotos(files); });
   }
+
+  // 写真だけを共有メニューへ（LINE等は貼り付けでは写真が入らないため。文章は「共有文をコピー」で貼り付ける）
+  document.getElementById('sharePhotosBtn').addEventListener('click', async () => {
+    const files = orderPhotos.map((ph, i) => new File([ph.blob], `order-photo-${i + 1}.jpg`, { type: 'image/jpeg' }));
+    try {
+      if (files.length && navigator.canShare && navigator.canShare({ files })) {
+        await navigator.share({ files });
+      } else {
+        showStatus('この端末・ブラウザでは写真の共有に対応していません。写真は長押しなどで保存して送ってください。', true);
+      }
+    } catch (err) {
+      if (!err || err.name !== 'AbortError') showStatus('写真を共有できませんでした。', true);
+    }
+  });
 
   // 写真つきコピー：メール・Googleドキュメント等へ貼り付けると写真も入る
   const escHtml = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
