@@ -586,6 +586,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 /* 発注：発注項目（写真）＋未発注項目（入力） */
 .order-block + .order-block{margin-top:20px;padding-top:18px;border-top:1px solid #ececec}
 .order-block-title{font-size:14px;font-weight:800;color:#191919;margin:0 0 4px}
+.order-photo-note{margin-top:12px}
 .order-block-hint{font-size:12px;color:#666;margin:0 0 11px}
 .photo-actions{display:flex;gap:8px;flex-wrap:wrap}
 .photo-btn{display:inline-flex;gap:7px;align-items:center;border:1px solid #d0d0d0;border-radius:10px;background:#fff;color:#202020;font-weight:800;font-size:13px;padding:10px 13px;transition:all .16s ease}
@@ -621,57 +622,53 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 
   <section class="panel" id="orderSection">
     <div class="panel-head"><div class="panel-title-wrap"><div class="num">01</div><div><h2>発注</h2></div></div></div>
-        <div id="orderArea"><div class="order-block"><div class="order-block-title">発注項目</div><p class="order-block-hint">発注した内容の写真（発注画面・伝票など）を追加します。</p><div class="photo-actions"><button type="button" class="photo-btn" id="photoCameraBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>カメラで撮影</button><button type="button" class="photo-btn" id="photoLibraryBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>アルバムから選ぶ</button></div><input type="file" id="photoCamera" accept="image/*" capture="environment" class="hidden"><input type="file" id="photoLibrary" accept="image/*" multiple class="hidden"><div class="photo-grid hidden" id="photoGrid"></div></div><div class="order-block"><div class="order-block-title">未発注項目</div><div class="item-list" id="orderList"></div><div class="section-bottom"><button type="button" class="add-btn" data-add="order">＋ 未発注品目を追加</button></div></div></div>
+        <div id="orderArea"><div class="order-block"><div class="order-block-title">発注項目</div><p class="order-block-hint">発注した内容の写真を追加します。</p><div class="photo-actions"><button type="button" class="photo-btn" id="photoCameraBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>カメラで撮影</button><button type="button" class="photo-btn" id="photoLibraryBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>アルバムから選ぶ</button></div><input type="file" id="photoCamera" accept="image/*" capture="environment" class="hidden"><input type="file" id="photoLibrary" accept="image/*" multiple class="hidden"><div class="photo-grid hidden" id="photoGrid"></div><div class="row-field order-photo-note"><label for="orderPhotoNote">補足事項（任意）</label><input id="orderPhotoNote" placeholder="例：〇〇は納品が明日になる予定" maxlength="180"></div></div><div class="order-block"><div class="order-block-title">未発注項目</div><p class="order-block-hint">後日発注希望や可能性がある品目を追加します。</p><div class="item-list" id="orderList"></div><div class="section-bottom"><button type="button" class="add-btn" data-add="order">＋ 未発注品目を追加</button></div></div></div>
   </section>
 
   <section class="panel" id="prepSection">
     <div class="panel-head"><div class="panel-title-wrap"><div class="num">02</div><div><h2>翌朝の仕込み</h2></div></div></div>
-    <p class="prep-guide">在庫がある商品はチェックしたままにします。仕込みが必要な商品は「在庫あり」のチェックを外してください。チェックを外した商品だけ共有文に追加されます。</p>
+    <p class="prep-guide">在庫がある商品はチェックしたままにします。仕込みや補充が必要な商品は「在庫あり」のチェックを外し、必要数を指定してください。</p>
     <div class="prep-table-wrap">
       <table class="prep-table" id="prepTable" aria-label="翌朝の仕込み・在庫表">
         <thead><tr><th scope="col" aria-label="カテゴリー"></th><th scope="col">Product Name</th><th scope="col">ストック数</th><th scope="col">在庫あり</th><th scope="col">必要数</th></tr></thead>
-        <tbody id="prepList"><tr data-entry="prep" data-row-id="orange-1" data-item="Orange" data-stock="morning100名以上1case"><td class="category-cell" rowspan="2">ジュース<br>（期限3日）</td><td class="product-cell" data-category="ジュース （期限3日）">Orange</td><td class="stock-cell">morning100名以上1case</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Orange 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="Orange 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="apple-2" data-item="Apple" data-stock="morning100名以上1case"><td class="product-cell" data-category="ジュース （期限3日）">Apple</td><td class="stock-cell">morning100名以上1case</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Apple 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="Apple 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="heartland-3" data-item="Heartland Keg" data-stock="1"><td class="category-cell" rowspan="3">ビール・ハイボール</td><td class="product-cell" data-category="ビール・ハイボール">Heartland Keg</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Heartland Keg 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="Heartland Keg 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="item-4" data-item="Nikka" data-stock="1"><td class="product-cell" data-category="ビール・ハイボール">Nikka</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Nikka 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="shortage" value="shortage" maxlength="30" aria-label="Nikka 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="item-5" data-item="Gas Canister" data-stock="1"><td class="product-cell" data-category="ビール・ハイボール">Gas Canister</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Gas Canister 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="Gas Canister 必要数" placeholder="—"></td></tr>
-
-
-
+        <tbody id="prepList"><tr data-entry="prep" data-row-id="heartland-3" data-item="Heartland Beer Keg" data-stock="1"><td class="category-cell" rowspan="3">ビール・ハイボール</td><td class="product-cell" data-category="ビール・ハイボール">Heartland Keg</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="	Heartland Beer Keg 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="Heartland Keg 必要数" placeholder="—"></td></tr>
+<tr data-entry="prep" data-row-id="item-4" data-item="Nikka" data-stock="1"><td class="product-cell" data-category="ビール・ハイボール">Nikka</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Nikka 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="Nikka 必要数" placeholder="—"></td></tr>
+<tr data-entry="prep" data-row-id="item-5" data-item="Beer/Highball Gas" data-stock="1"><td class="product-cell" data-category="ビール・ハイボール">Beer/Highball Gas</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Gas Canister 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="Gas Canister 必要数" placeholder="—"></td></tr>
 
 <tr data-entry="prep" data-row-id="lemon-sour-sy" data-item="Lemon Sour SY" data-stock="1"><td class="category-cell" rowspan="5">シロップ<br>（期限2週間）</td><td class="product-cell" data-category="シロップ （期限2週間）">Lemon Sour SY</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Lemon Sour SY 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="Lemon Sour SY 必要数" placeholder="—"></td></tr>
 <tr data-entry="prep" data-row-id="c-moni-sy" data-item="C-Moni SY" data-stock="1"><td class="product-cell" data-category="シロップ （期限2週間）">C-Moni SY</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="C-Moni SY 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="C-Moni SY 必要数" placeholder="—"></td></tr>
 <tr data-entry="prep" data-row-id="zakuro-ginger-sy" data-item="Pomegranate Ginger SY" data-stock="1"><td class="product-cell" data-category="シロップ （期限2週間）">Pomegranate Ginger SY</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Pomegranate Ginger SY 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="Pomegranate Ginger SY 必要数" placeholder="—"></td></tr>
 <tr data-entry="prep" data-row-id="honey-sy" data-item="Honey SY" data-stock="1"><td class="product-cell" data-category="シロップ （期限2週間）">Honey SY</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Honey SY 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="Honey SY 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="sy-11" data-item="Washed Sugar SY" data-stock="1"><td class="product-cell" data-category="シロップ （期限2週間）">Washed Sugar SY</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Washed Sugar SY 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="Washed Sugar SY 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="tea-v-12" data-item="Tea V" data-stock="1"><td class="category-cell" rowspan="3">アルコール<br>（期限1ヶ月）</td><td class="product-cell" data-category="アルコール （期限1ヶ月）">Tea V</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Tea V 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="Tea V 必要数" placeholder="—"></td></tr>
+<tr data-entry="prep" data-row-id="sy-11" data-item="SY" data-stock="1"><td class="product-cell" data-category="シロップ （期限2週間）">SY</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="SY 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="2" value="2" maxlength="30" aria-label="SY 必要数" placeholder="—"></td></tr>
+<tr data-entry="prep" data-row-id="tea-v-12" data-item="Tea V" data-stock="1"><td class="category-cell" rowspan="3">アルコール<br>（期限1ヶ月）</td><td class="product-cell" data-category="アルコール （期限1ヶ月）">Tea V</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Tea V 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="2" value="2" maxlength="30" aria-label="Tea V 必要数" placeholder="—"></td></tr>
 <tr data-entry="prep" data-row-id="sangria-13" data-item="Sangria" data-stock="3"><td class="product-cell" data-category="アルコール （期限1ヶ月）">Sangria</td><td class="stock-cell">3</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Sangria 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><select class="quantity-select" data-field="quantity" data-default="選択" aria-label="Sangria 必要数"><option value="選択" selected>選択</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></td></tr>
 <tr data-entry="prep" data-row-id="martini-14" data-item="Martini" data-stock="1"><td class="product-cell" data-category="アルコール （期限1ヶ月）">Martini</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Martini 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="Martini 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="oolong-15" data-item="Oolong" data-stock="1"><td class="category-cell" rowspan="3">お茶<br>（期限2日）</td><td class="product-cell" data-category="お茶 （期限2日）">Oolong</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Oolong 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="Oolong 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="ist-16" data-item="IST" data-stock="1"><td class="product-cell" data-category="お茶 （期限2日）">IST</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="IST 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="IST 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="ic-17" data-item="IC" data-stock="1"><td class="product-cell" data-category="お茶 （期限2日）">IC</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="IC 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="" value="" maxlength="30" aria-label="IC 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="lemon-cut" data-item="Lemon Cut" data-stock="1.5"><td class="category-cell" rowspan="4">フルーツ<br>（期限3日）</td><td class="product-cell" data-category="フルーツ （期限3日）">Lemon Cut</td><td class="stock-cell">1.5</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Lemon Cut 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><select class="quantity-select" data-field="quantity" data-default="選択" aria-label="Lemon Cut 必要数"><option value="選択" selected>選択</option><option value="1">1</option><option value="2">2</option></select></td></tr>
-<tr data-entry="prep" data-row-id="lime-cut" data-item="Lime Cut" data-stock="1.5"><td class="product-cell" data-category="フルーツ （期限3日）">Lime Cut</td><td class="stock-cell">1.5</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Lime Cut 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><select class="quantity-select" data-field="quantity" data-default="選択" aria-label="Lime Cut 必要数"><option value="選択" selected>選択</option><option value="1">1</option><option value="2">2</option></select></td></tr>
+<tr data-entry="prep" data-row-id="oolong-15" data-item="Oolong" data-stock="1"><td class="category-cell" rowspan="3">ソフトドリンク<br>（期限2日）</td><td class="product-cell" data-category="ソフトドリンク （期限2日）">Oolong</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Oolong 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="Oolong 必要数" placeholder="—"></td></tr>
+<tr data-entry="prep" data-row-id="ist-16" data-item="IST" data-stock="1"><td class="product-cell" data-category="ソフトドリンク （期限2日）">IST</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="IST 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="IST 必要数" placeholder="—"></td></tr>
+<tr data-entry="prep" data-row-id="ic-17" data-item="IC" data-stock="1"><td class="product-cell" data-category="ソフトドリンク （期限2日）">IC</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="IC 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="" value="" maxlength="30" aria-label="IC 必要数" placeholder="—"></td></tr>
+<tr data-entry="prep" data-row-id="lemon-cut" data-item="Lemon Cut" data-stock="2"><td class="category-cell" rowspan="4">フルーツ<br>（期限3日）</td><td class="product-cell" data-category="フルーツ （期限3日）">Lemon Cut</td><td class="stock-cell">2</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Lemon Cut 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><select class="quantity-select" data-field="quantity" data-default="選択" aria-label="Lemon Cut 必要数"><option value="選択" selected>選択</option><option value="1">1</option><option value="2">2</option></select></td></tr>
+<tr data-entry="prep" data-row-id="lime-cut" data-item="Lime Cut" data-stock="2"><td class="product-cell" data-category="フルーツ （期限3日）">Lime Cut</td><td class="stock-cell">2</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Lime Cut 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><select class="quantity-select" data-field="quantity" data-default="選択" aria-label="Lime Cut 必要数"><option value="選択" selected>選択</option><option value="1">1</option><option value="2">2</option></select></td></tr>
 
-<tr data-entry="prep" data-row-id="item-20" data-item="Lemon Slices" data-stock="1.5"><td class="product-cell" data-category="フルーツ （期限3日）">Lemon Slices</td><td class="stock-cell">1.5</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Lemon Slices 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="Lemon Slices 必要数" placeholder="—"></td></tr>
+<tr data-entry="prep" data-row-id="item-20" data-item="Lemon Slices" data-stock="2.5"><td class="product-cell" data-category="フルーツ （期限3日）">Lemon Slices</td><td class="stock-cell">2.5</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Lemon Slices 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><select class="quantity-select" data-field="quantity" data-default="選択" aria-label="Lemon Slices 必要数"><option value="選択" selected>選択</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></td></tr>
 <tr data-entry="prep" data-row-id="item-21" data-item="Orange Slices" data-stock="1"><td class="product-cell" data-category="フルーツ （期限3日）">Orange Slices</td><td class="stock-cell">1</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Orange Slices 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="1" value="1" maxlength="30" aria-label="Orange Slices 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="espresso-22" data-item="Coffee Beans (Espresso)" data-stock="full"><td class="category-cell" rowspan="5">補充</td><td class="product-cell" data-category="補充">Coffee Beans (Espresso)</td><td class="stock-cell">full</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Coffee Beans (Espresso) 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="shortage" value="shortage" maxlength="30" aria-label="Coffee Beans (Espresso) 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="filter-23" data-item="Coffee Beans (Filter)" data-stock="full"><td class="product-cell" data-category="補充">Coffee Beans (Filter)</td><td class="stock-cell">full</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Coffee Beans (Filter) 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="shortage" value="shortage" maxlength="30" aria-label="Coffee Beans (Filter) 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="item-24" data-item="Black Straws" data-stock="full"><td class="product-cell" data-category="補充">Black Straws</td><td class="stock-cell">full</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Black Straws 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="shortage" value="shortage" maxlength="30" aria-label="Black Straws 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="togo-25" data-item="To-Go Cups" data-stock="full"><td class="product-cell" data-category="補充">To-Go Cups</td><td class="stock-cell">full</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="To-Go Cups 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="shortage" value="shortage" maxlength="30" aria-label="To-Go Cups 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="item-26" data-item="Service Towels" data-stock="full"><td class="product-cell" data-category="補充">Service Towels</td><td class="stock-cell">full</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Service Towels 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="shortage" value="shortage" maxlength="30" aria-label="Service Towels 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="earl-grey-27" data-item="Earl Grey" data-stock="full"><td class="category-cell" rowspan="6">ティーバッグ</td><td class="product-cell" data-category="ティーバッグ">Earl Grey </td><td class="stock-cell">full</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Earl Grey 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="shortage" value="shortage" maxlength="30" aria-label="Earl Grey 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="darjeeling-28" data-item="Darjeeling" data-stock="full"><td class="product-cell" data-category="ティーバッグ">Darjeeling</td><td class="stock-cell">full</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Darjeeling 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="shortage" value="shortage" maxlength="30" aria-label="Darjeeling 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="english-breakfast-29" data-item="English Breakfast" data-stock="full"><td class="product-cell" data-category="ティーバッグ">English Breakfast</td><td class="stock-cell">full</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="English Breakfast 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="shortage" value="shortage" maxlength="30" aria-label="English Breakfast 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="chamomile-30" data-item="Chamomile" data-stock="full"><td class="product-cell" data-category="ティーバッグ">Chamomile</td><td class="stock-cell">full</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Chamomile 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="shortage" value="shortage" maxlength="30" aria-label="Chamomile 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="apple-tea-31" data-item="Apple Tea" data-stock="full"><td class="product-cell" data-category="ティーバッグ">Apple Tea</td><td class="stock-cell">full</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Apple Tea 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="shortage" value="shortage" maxlength="30" aria-label="Apple Tea 必要数" placeholder="—"></td></tr>
-<tr data-entry="prep" data-row-id="jasmine-32" data-item="Jasmine" data-stock="full"><td class="product-cell" data-category="ティーバッグ">Jasmine</td><td class="stock-cell">full</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Jasmine 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="shortage" value="shortage" maxlength="30" aria-label="Jasmine 必要数" placeholder="—"></td></tr></tbody>
+<tr data-entry="prep" data-row-id="espresso-22" data-item="Coffee Beans (Espresso)" data-stock="満杯"><td class="category-cell" rowspan="5">補充</td><td class="product-cell" data-category="補充">Coffee Beans (Espresso)</td><td class="stock-cell">満杯</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Coffee Beans (Espresso) 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="満杯" value="満杯" maxlength="30" aria-label="Coffee Beans (Espresso) 必要数" placeholder="—"></td></tr>
+<tr data-entry="prep" data-row-id="filter-23" data-item="Coffee Beans (Filter)" data-stock="満杯"><td class="product-cell" data-category="補充">Coffee Beans (Filter)</td><td class="stock-cell">満杯</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Coffee Beans (Filter) 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="満杯" value="満杯" maxlength="30" aria-label="Coffee Beans (Filter) 必要数" placeholder="—"></td></tr>
+<tr data-entry="prep" data-row-id="item-24" data-item="Black Straws" data-stock="満杯"><td class="product-cell" data-category="補充">Black Straws</td><td class="stock-cell">満杯</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Black Straws 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="満杯" value="満杯" maxlength="30" aria-label="Black Straws 必要数" placeholder="—"></td></tr>
+<tr data-entry="prep" data-row-id="togo-25" data-item="To-Go Cups" data-stock="満杯"><td class="product-cell" data-category="補充">To-Go Cups</td><td class="stock-cell">満杯</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="To-Go Cups 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="満杯" value="満杯" maxlength="30" aria-label="To-Go Cups 必要数" placeholder="—"></td></tr>
+<tr data-entry="prep" data-row-id="item-26" data-item="Torchon" data-stock="満杯"><td class="product-cell" data-category="補充">Torchon</td><td class="stock-cell">満杯</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Service Towels 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="満杯" value="満杯" maxlength="30" aria-label="Service Towels 必要数" placeholder="—"></td></tr>
+<tr data-entry="prep" data-row-id="earl-grey-27" data-item="Earl Grey" data-stock="満杯"><td class="category-cell" rowspan="6">ティーバッグ</td><td class="product-cell" data-category="ティーバッグ">Earl Grey </td><td class="stock-cell">満杯</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Earl Grey 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="満杯" value="満杯" maxlength="30" aria-label="Earl Grey 必要数" placeholder="—"></td></tr>
+<tr data-entry="prep" data-row-id="darjeeling-28" data-item="Darjeeling" data-stock="満杯"><td class="product-cell" data-category="ティーバッグ">Darjeeling</td><td class="stock-cell">満杯</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Darjeeling 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="満杯" value="満杯" maxlength="30" aria-label="Darjeeling 必要数" placeholder="—"></td></tr>
+<tr data-entry="prep" data-row-id="english-breakfast-29" data-item="English Breakfast" data-stock="満杯"><td class="product-cell" data-category="ティーバッグ">English Breakfast</td><td class="stock-cell">満杯</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="English Breakfast 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="満杯" value="満杯" maxlength="30" aria-label="English Breakfast 必要数" placeholder="—"></td></tr>
+<tr data-entry="prep" data-row-id="chamomile-30" data-item="Chamomile" data-stock="満杯"><td class="product-cell" data-category="ティーバッグ">Chamomile</td><td class="stock-cell">満杯</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Chamomile 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="満杯" value="満杯" maxlength="30" aria-label="Chamomile 必要数" placeholder="—"></td></tr>
+<tr data-entry="prep" data-row-id="apple-tea-31" data-item="Apple Tea" data-stock="満杯"><td class="product-cell" data-category="ティーバッグ">Apple Tea</td><td class="stock-cell">満杯</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Apple Tea 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="満杯" value="満杯" maxlength="30" aria-label="Apple Tea 必要数" placeholder="—"></td></tr>
+<tr data-entry="prep" data-row-id="jasmine-32" data-item="Jasmine" data-stock="満杯"><td class="product-cell" data-category="ティーバッグ">Jasmine</td><td class="stock-cell">満杯</td><td class="inventory-cell"><label class="inventory-check"><input type="checkbox" data-field="inStock" checked aria-label="Jasmine 在庫あり"><span class="sr-only">在庫あり</span></label></td><td class="quantity-cell"><input class="quantity-input" type="text" data-field="quantity" data-default="満杯" value="満杯" maxlength="30" aria-label="Jasmine 必要数" placeholder="—"></td></tr></tbody>
       </table>
     </div>
   </section>
 
   <section class="panel" id="handoverSection">
     <div class="panel-head"><div class="panel-title-wrap"><div class="num">03</div><div><h2>引継ぎ事項</h2></div></div></div>
+    <p class="prep-guide">メニュー・材料変更や掃除の引継ぎなど報告事項があれば追加します。</p>
     <div id="handoverArea"><div class="item-list" id="handoverList"></div><div class="section-bottom"><button type="button" class="add-btn" data-add="handover">＋ 引継ぎ事項を追加</button></div></div>
   </section>
 
@@ -679,7 +676,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     <div class="preview-head"><h2>共有文</h2></div>
     <div class="preview" id="preview" role="status" aria-live="polite"></div>
     <div id="validation" class="warning hidden"></div>
-    <div class="preview-actions"><button type="button" class="btn btn-secondary" id="copyBtn">共有文をコピー</button><button type="button" class="btn btn-secondary hidden" id="sharePhotosBtn">写真を共有（LINEなど）</button><button type="button" class="btn btn-secondary" id="clearBtn">入力をリセット</button></div>
+    <div class="preview-actions"><button type="button" class="btn btn-secondary" id="sharePhotosBtn">文章＋写真をまとめて共有</button><button type="button" class="btn btn-secondary" id="clearBtn">入力をリセット</button></div>
     <div class="status" id="status" aria-live="polite"></div>
   </section>
 </main>
@@ -784,6 +781,23 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
       return Object.values(item).some(value => Boolean(value));
     });
   }
+  // 翌朝の仕込み：共有文でのまとめ方と単位
+  const PREP_GROUPS = [
+    { name: 'シロップ・アルコール', cats: ['シロップ', 'アルコール'], unit: '本' },
+    { name: 'ソフトドリンク', cats: ['ソフトドリンク'], unit: '本' },
+    { name: 'フルーツ', cats: ['フルーツ'], unit: '個' },
+    { name: '補充・ティーバッグ', cats: ['補充', 'ティーバッグ'], fixed: '満杯に補充' }
+  ];
+  function prepGroupOf(category) {
+    return PREP_GROUPS.find(g => g.cats.includes(category)) || { name: category || 'その他', cats: [category] };
+  }
+  function prepLine(item, group) {
+    let q = item.quantity && item.quantity !== '選択' ? item.quantity : (group.fixed || '');
+    if (q === '満杯') q = '満杯に補充';
+    if (!q) return item.item;
+    if (/^\d+(\.\d+)?$/.test(q)) return group.unit ? `${item.item}（${q}${group.unit}分仕込み）` : `${item.item}（必要数：${q}）`;
+    return `${item.item}（${q}）`;
+  }
   function meaningfulLine(type, item) {
     if (type === 'order') {
       const label = item.item || '品目未入力';
@@ -819,7 +833,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
       const items = collect(type);
       lines.push({ t: '' }, { t: `- - - - ${cfg.title} - - - -` });
       if (type === 'order') {
+        const orderNote = (document.getElementById('orderPhotoNote').value || '').trim();
         if (orderPhotos.length) lines.push({ t: `【発注】写真${orderPhotos.length}枚`, photos: [...orderPhotos] });
+        else if (orderNote) lines.push({ t: '【発注】' });
+        if (orderNote) lines.push({ t: `補足：${orderNote}` });
         if (items.length) {
           lines.push({ t: '【未発注】' });
           for (const item of items) lines.push({ t: `・${meaningfulLine(type, item)}` });
@@ -829,7 +846,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         for (const item of items) {
           const category = item.category || 'その他';
           if (!groups.has(category)) groups.set(category, []);
-          groups.get(category).push(meaningfulLine(type, item));
+          groups.get(category).push(prepLine(item, prepGroupOf(category)));
         }
         for (const [category, list] of groups.entries()) {
           lines.push({ t: `【${category}】` });
@@ -852,7 +869,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         preview.appendChild(wrap);
       }
     });
-    document.getElementById('sharePhotosBtn').classList.toggle('hidden', !orderPhotos.length);
     validation.classList.add('hidden');
     return latestMessage;
   }
@@ -864,7 +880,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   }
   function saveDraft() {
     try {
-      const state = {version: 4, date: dateInput.value, sections:{}};
+      const state = {version: 4, date: dateInput.value, orderNote: document.getElementById('orderPhotoNote').value, sections:{}};
       for (const [type, cfg] of Object.entries(types)) {
         state.sections[type] = {items:[...cfg.list.querySelectorAll('[data-entry]')].map(entry => {
           const row = {};
@@ -892,6 +908,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
       if (!raw) return false;
       const state = JSON.parse(raw);
       if (state.date) dateInput.value = state.date;
+      if (typeof state.orderNote === 'string') document.getElementById('orderPhotoNote').value = state.orderNote;
       for (const [type, cfg] of Object.entries(types)) {
         const saved = state.sections?.[type];
         if (!saved) continue;
@@ -906,7 +923,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
               const check = row.querySelector('[data-field="inStock"]');
               const quantity = row.querySelector('[data-field="quantity"]');
               if (check && typeof item.inStock === 'boolean') check.checked = item.inStock;
-              if (quantity && item.quantity !== undefined && item.quantity !== null) quantity.value = item.quantity;
+              if (quantity && item.quantity !== undefined && item.quantity !== null) quantity.value = ['shortage', '不足分'].includes(item.quantity) ? '満杯' : item.quantity;
             }
           }
           continue;
@@ -1072,17 +1089,22 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     input.addEventListener('change', () => { const files = [...input.files]; input.value = ''; addPhotos(files); });
   }
 
-  // 写真だけを共有メニューへ（LINE等は貼り付けでは写真が入らないため。文章は「共有文をコピー」で貼り付ける）
+  // 共有メニューで文章と写真を同時に渡す。アプリによっては文章が落ちるため、念のため文章もコピーしておく
   document.getElementById('sharePhotosBtn').addEventListener('click', async () => {
+    const message = buildMessage();
     const files = orderPhotos.map((ph, i) => new File([ph.blob], `order-photo-${i + 1}.jpg`, { type: 'image/jpeg' }));
+    if (!navigator.share) {
+      showStatus('この端末・ブラウザでは共有メニューが使えません。「共有文をコピー」をお使いください。', true);
+      return;
+    }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(message).catch(() => {});
+    const data = { text: message };
+    if (files.length && navigator.canShare && navigator.canShare({ files })) data.files = files;
     try {
-      if (files.length && navigator.canShare && navigator.canShare({ files })) {
-        await navigator.share({ files });
-      } else {
-        showStatus('この端末・ブラウザでは写真の共有に対応していません。写真は長押しなどで保存して送ってください。', true);
-      }
+      await navigator.share(data);
+      showStatus(data.files ? '共有しました。文章が入らなかった場合は、文章もコピー済みなので貼り付けてください。' : '共有しました。');
     } catch (err) {
-      if (!err || err.name !== 'AbortError') showStatus('写真を共有できませんでした。', true);
+      if (!err || err.name !== 'AbortError') showStatus('共有できませんでした。「共有文をコピー」をお使いください。', true);
     }
   });
 
@@ -1105,13 +1127,14 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   document.querySelectorAll('[data-add]').forEach(btn => btn.addEventListener('click', () => addEntry(btn.dataset.add)));
   types.prep.list.addEventListener('input', () => { syncPrepTableAppearance(); saveDraft(); buildMessage(); });
   types.prep.list.addEventListener('change', () => { syncPrepTableAppearance(); saveDraft(); buildMessage(); });
+  document.getElementById('orderPhotoNote').addEventListener('input', () => { saveDraft(); buildMessage(); });
   dateInput.addEventListener('input', () => { saveDraft(); buildMessage(); });
   dateInput.addEventListener('change', () => { saveDraft(); buildMessage(); });
-  document.getElementById('copyBtn').addEventListener('click', copyMessage);
   document.getElementById('clearBtn').addEventListener('click', () => {
     // 確認ダイアログに依存せず、クリックしたらその場でリセットする。
     // リセット後も各セクションの空の入力欄を1項目ずつ残す。
     clearPhotos();
+    document.getElementById('orderPhotoNote').value = '';
     for (const type of ['order', 'handover']) types[type].list.replaceChildren();
     resetPrepTable();
     dateInput.value = todayJST();
